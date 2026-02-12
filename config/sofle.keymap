@@ -97,11 +97,6 @@
                                  &none            &none            &none            &none            &none              &none  &none  &none  &none  &none
             >;
 
-        sensor-bindings =
-                <&inc_dec_kp RGB_BRD RGB_BRI>,
-                <&inc_dec_kp RGB_HUD RGB_HUI>;
-        };
-
         layer_4 {
             bindings = <
 &trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans  &trans
