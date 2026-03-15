@@ -6,4 +6,4 @@ jobs:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
     with:
       # Esto combina el mensaje del commit y el número de ejecución de GitHub
-      archive_name: "zmk-firmware-${{ github.event.head_commit.message }}_run${{ github.run_number }}"
+      archive_name: "zmk-build-${{ github.run_number }}"
