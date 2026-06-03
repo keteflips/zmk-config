@@ -19,11 +19,11 @@
 #
 ---
 include:
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: sofle_left
     snippet: zmk-studio
     cmake-args: -DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: sofle_right
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: settings_reset
