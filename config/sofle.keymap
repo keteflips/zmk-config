@@ -31,12 +31,12 @@
             bindings = <&kp>, <&kp>;
         };
 
-        td_mt: tap_dance_mod_tap {
+        td_capslock: tap_dance_mod_capslock {
             compatible = "zmk,behavior-tap-dance";
-            label = "TAP_DANCE_MOD_TAP";
+            label = "TAP_DANCE_MOD_CAPSLOCK";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mt LSHIFT CAPSLOCK>, <&kp LCTRL>;
+            bindings = <&mt LSHIFT CAPSLOCK>;
         };
 
         td_ntilde: tap_dance_n_tilde {
