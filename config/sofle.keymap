@@ -52,14 +52,14 @@
             label = "TAP_DANCE_SHIFTEND";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
-            bindings = <&mt LSHIFT RIGHT_SHIFT>, <&kp END>;
+            bindings = <&kp RSHIFT>, <&kp END>;
         };
 
         tp_gravehome: tp_gravehome {
             compatible = "zmk,behavior-tap-dance";
             label = "TP_GRAVEHOME";
             #binding-cells = <0>;
-            bindings = <&mt LSHIFT C>, <&kp HOME>;
+            bindings = <&kp GRAVE>, <&kp HOME>;
         };
     };
 
