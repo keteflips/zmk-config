@@ -1,56 +1,27 @@
 # AGENTS.md — ZMK user config repo (Sofle keyboard)
 
 ## Overview
-This is a ZMK firmware **user configuration** repository. Firmware is pulled at build time via `config/west.yml`. There is **no local build toolchain** — all builds happen in GitHub Actions.
+This repository contains a ZMK user configuration for a Sofle split keyboard. The firmware is not built locally here; CI builds the images from GitHub Actions using the manifest in [config/west.yml](config/west.yml) and the matrix in [build.yaml](build.yaml).
 
-## Directory layout
-```
-config/              # Self module (west.yml `self:` → `config/`)
-  west.yml           #   Zephyr manifest; pulls ZMK + zmk-nice-oled
-  sofle.conf         #   Kconfig for Sofle shield
-  sofle.keymap       #   Devicetree keymap (not C!)
-boards/shields/      # Custom shield definitions (currently only .gitkeep)
-zephyr/module.yml    # Sets board_root to repo root
-build.yaml           # GitHub Actions build matrix
-```
+## Important files
+- [config/sofle.keymap](config/sofle.keymap): main keymap in Devicetree source format. This is not C code.
+- [config/sofle.conf](config/sofle.conf): shared Kconfig options for all Sofle builds.
+- [config/west.yml](config/west.yml): west manifest, including the ZMK pin and the external module for the OLED shield.
+- [build.yaml](build.yaml): GitHub Actions build matrix.
+- [zephyr/module.yml](zephyr/module.yml): Zephyr module configuration.
 
-## Key conventions
+## Conventions to preserve
+- Keep the board target as `nice_nano_v2`.
+- Keep ZMK pinned to `v0.3` in [config/west.yml](config/west.yml) and the workflow reference used by CI.
+- Treat the keymap as Devicetree source. Keep bindings in the `<&kp ...>` style.
+- Preserve the existing layer structure. Layers are indexed 0–4, and the `gaming` layer is implicitly layer 4. Changing the order or count of layers can break `&to`, `&mo`, `&tog`, and `&lt` references.
+- Preserve the custom behaviors defined in [config/sofle.keymap](config/sofle.keymap): `hm` for home-row mods and the tap-dance behaviors `td_capslock` and `td_ntilde`.
+- Do not modify the local `.zmk/` workspace directory.
 
-### Board naming
-Use `nice_nano_v2` (legacy HWMv1 format). Do **not** use `nice_nano@2//zmk` (HWMv2).
+## Build and CI notes
+- The left half uses Studio in [build.yaml](build.yaml); the related Kconfig options are commented out in [config/sofle.conf](config/sofle.conf).
+- If adding a new shield or peripheral, update both [config/west.yml](config/west.yml) and [build.yaml](build.yaml).
+- Split keyboards need one build entry per half.
 
-### ZMK version
-**Pinned to ZMK v0.3.** Both `config/west.yml` (`defaults.revision: v0.3`) and `.github/workflows/build.yml` (workflow ref `@v0.3`) reference this version. Changing one requires changing the other.
-
-### nice_oled shield
-The `zmk-nice-oled` external module (from `mctechnology17`) provides the `nice_oled` shield for OLED display support. Added as secondary shield in `build.yaml` (`sofle_left nice_oled`, `sofle_right nice_oled`). The module is declared in `config/west.yml` as a separate project and remote.
-
-### Keymap format
-Keymaps are **Devicetree source** (bindings as `<&kp A>`), not C. Edit `config/sofle.keymap`.
-
-### Keymap layer numbering
-The keymap has 5 layers (indices 0–4). `#define`s only cover BASE(0) through ADJUST(3); the `gaming` layer is **implicitly index 4**. Adding, removing, or reordering layers breaks `&to`/`&tog`/`&mo` references.
-
-### Custom behaviors
-Two custom behaviors defined: `hm` (home-row hold-tap mods) and `td_mt` (tap-dance for LSHIFT/CAPSLOCK/LCTRL). Conditional layers and the adjust activation rely on these. Do not remove them without updating all references.
-
-### ZMK Studio
-Only the **left half** gets Studio via `build.yaml` (snippet `studio-rpc-usb-uart`, cmake-args `-DCONFIG_ZMK_STUDIO=y -DCONFIG_ZMK_STUDIO_LOCKING=n`). Studio config is **commented out** in `sofle.conf`. Locking is disabled because custom behaviors conflict with Studio's layer-locking mechanism.
-
-### sofle.conf scope
-`config/sofle.conf` is included for **every** Sofle shield build (left, right, `settings_reset`). Per-half Kconfig differences belong in `build.yaml` `cmake-args`.
-
-### Build matrix (build.yaml)
-Each firmware image needs its own entry under `include:`. Split halves get separate entries. Secondary shields (e.g., `nice_oled`) are appended to the shield value: `sofle_left nice_oled`.
-
-### .zmk/ directory
-**Never touch `.zmk/`.** It is git-ignored and is the local `west` workspace. Only used for optional local `west build`.
-
-## Adding a new shield/peripheral
-1. Add board files under `boards/` if needed
-2. Add any external module to `config/west.yml` if required
-3. Add an entry in `build.yaml` under `include:`
-4. Each half of a split keyboard gets its own build entry
-
-## CI
-Builds trigger on push, PR, and `workflow_dispatch`. Reusable workflow: `zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3`. Archive naming: `zmk-build-{ref_name}-run-{run_number}`.
+## Agent guidance
+When editing this repository, prefer minimal, targeted changes. If changing keybindings, keep behavior names and layer references consistent. If introducing new layers or new behaviors, update all relevant references in the keymap.
