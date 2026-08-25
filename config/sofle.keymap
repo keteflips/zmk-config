@@ -68,10 +68,6 @@
             #binding-cells = <0>;
             bindings = <&kp GRAVE>, <&kp HOME>;
         };
-
-        &soft_off {
-            hold-time-ms = <2000>;
-        };
     };
 
     conditional_layers {
@@ -161,4 +157,8 @@
                 <&inc_dec_kp PAGE_DOWN PAGE_UP>;
         };
     };
+};
+
+&soft_off {
+    hold-time-ms = <2000>;
 };
