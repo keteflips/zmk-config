@@ -14,8 +14,8 @@ This repository contains a ZMK user configuration for a Sofle split keyboard. Th
 - Keep the board target as `nice_nano_v2`.
 - Keep ZMK pinned to `v0.3` in [config/west.yml](config/west.yml) and the workflow reference used by CI.
 - Treat the keymap as Devicetree source. Keep bindings in the `<&kp ...>` style.
-- Preserve the existing layer structure. Layers are indexed 0–4, and the `gaming` layer is implicitly layer 4. Changing the order or count of layers can break `&to`, `&mo`, `&tog`, and `&lt` references.
-- Preserve the custom behaviors defined in [config/sofle.keymap](config/sofle.keymap): `hm` for home-row mods and the tap-dance behaviors `td_capslock` and `td_ntilde`.
+- Preserve the existing layer structure. Layers are named via `#define` in [config/sofle.keymap](config/sofle.keymap): `BASE` 0, `LOWER` 1, `RAISE` 2, `NUMPAD` 3, `ADJUST` 4, `GAMING` 5. Always reference layers by these names (in `&to`, `&mo`, `&tog`, `&lt`, and `conditional_layers`), never by raw numbers. Adding or reordering layers requires updating the defines and every reference, plus the conditional layer target.
+- Preserve the custom behaviors defined in [config/sofle.keymap](config/sofle.keymap): `hml`/`hmr` for home-row mods, the `ntilde_ht` hold-tap, and the tap-dance behaviors `td_shiftend` and `tp_gravehome`.
 - Do not modify the local `.zmk/` workspace directory.
 
 ## Build and CI notes
