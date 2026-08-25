@@ -17,44 +17,49 @@
 #define ADJUST 4
 #define GAMING 5
 
+// Hand position groups for home-row mods (timeless recipe)
+#define KEYS_L 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38 39 40 41 42
+#define KEYS_R 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 43 44 45 46 47 48 49
+#define THUMBS 50 51 52 53 54 55 56 57 58 59
+
 / {
     // Configuración Home Row Mods (Timeless)
 
     behaviors {
-        hm: homerow_mods {
+        hml: home_row_mod_left {
             compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS";
+            label = "HOME_ROW_MOD_LEFT";
+            #binding-cells = <2>;
+            tapping-term-ms = <280>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <150>;
+            flavor = "balanced";
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
+        };
+
+        hmr: home_row_mod_right {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOME_ROW_MOD_RIGHT";
+            #binding-cells = <2>;
+            tapping-term-ms = <280>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <150>;
+            flavor = "balanced";
+            bindings = <&kp>, <&kp>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
+        };
+
+        ntilde_ht: ntilde_ht {
+            compatible = "zmk,behavior-hold-tap";
+            label = "NTILDE_HOLD_TAP";
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <175>;
-            hold-trigger-on-release;
-            require-prior-idle-ms = <120>;
-            flavor = "balanced";
+            flavor = "tap-preferred";
             bindings = <&kp>, <&kp>;
-        };
-
-        td_capslock: tap_dance_mod_capslock {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TAP_DANCE_MOD_CAPSLOCK";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&mt LSHIFT CAPSLOCK>;
-        };
-
-        td_ntilde: tap_dance_n_tilde {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TAP_DANCE_N_TILDE";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&mt LSHIFT N>, <&kp RA(N)>;
-        };
-
-        td_shiftend: tap_dance_shiftend {
-            compatible = "zmk,behavior-tap-dance";
-            label = "TAP_DANCE_SHIFTEND";
-            #binding-cells = <0>;
-            tapping-term-ms = <200>;
-            bindings = <&kp RSHIFT>, <&kp END>;
         };
 
         tp_gravehome: tp_gravehome {
@@ -62,6 +67,10 @@
             label = "TP_GRAVEHOME";
             #binding-cells = <0>;
             bindings = <&kp GRAVE>, <&kp HOME>;
+        };
+
+        &soft_off {
+            hold-time-ms = <2000>;
         };
     };
 
@@ -82,8 +91,8 @@
             bindings = <
 &tp_gravehome  &kp N1  &kp N2      &kp N3       &kp N4       &kp N5                           &kp N6      &kp N7       &kp N8       &kp N9      &kp N0         &kp DELETE
 &kp ESC        &kp Q   &kp W       &kp E        &kp R        &kp T                            &kp Y       &kp U        &kp I        &kp O       &kp SEMICOLON  &kp BSPC
-&kp TAB        &kp A   &hm LALT S  &hm LCTRL D  &hm LSHFT F  &kp G                            &kp H       &hm RSHFT J  &hm RCTRL K  &hm RALT L  &kp P          &kp SQT
-&td_capslock   &kp Z   &kp X       &kp C        &kp V        &kp B   &kp C_MUTE    &none      &td_ntilde  &kp M        &kp COMMA    &kp DOT     &kp FSLH       &td_shiftend
+&kp TAB        &kp A   &hml LALT S  &hml LCTRL D  &hml LSHFT F  &kp G                            &kp H       &hmr RSHFT J  &hmr RCTRL K  &hmr RALT L  &kp P          &kp SQT
+&mt LSHIFT CAPSLOCK  &kp Z   &kp X       &kp C        &kp V        &kp B   &kp C_MUTE    &none      &ntilde_ht RA(N) N  &kp M  &kp COMMA    &kp DOT     &kp FSLH       &mt RSHIFT END
                        &kp LGUI    &kp LALT     &kp LCTRL    &mo LOWER   &kp RET       &kp SPACE  &mo RAISE      &mo NUMPAD     &kp RALT     &kp RGUI
             >;
 
@@ -123,7 +132,7 @@
               &none  &trans  &trans  &trans  &trans    &trans  &trans          &trans           &trans           &none
             >;
 
-            label = "extra";
+            display-name = "numpad";
         };
 
         adjust_layer {
@@ -132,7 +141,7 @@
 &bt BT_CLR      &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4                               &to GAMING  &none  &none  &none  &none  &none
 &out OUT_USB    &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_EFF                            &none  &none  &none  &none  &none  &none
 &out OUT_BLE    &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &none            &none            &none                                      &none  &none  &none  &none  &none  &none
-&studio_unlock  &none            &none            &none            &none            &none            &rgb_ug RGB_TOG    &none  &none  &none  &none  &none  &none  &none
+&none           &bootloader      &sys_reset      &soft_off         &none            &none            &rgb_ug RGB_TOG    &none  &none  &none  &none  &none  &none  &none
                                  &none            &none            &none            &none            &none              &none  &none  &none  &none  &none
             >;
         };
