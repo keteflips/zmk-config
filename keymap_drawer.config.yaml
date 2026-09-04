@@ -1,0 +1,9 @@
+parse_config:
+  raw_binding_map:
+    "&tp_gravehome": {t: "`", s: "Home"}
+    "&bootloader": {t: "Bootloader"}
+    "&sys_reset": {t: "Reset"}
+    "&soft_off": {t: "Soft Off"}
+
+draw_config:
+  dark_mode: auto

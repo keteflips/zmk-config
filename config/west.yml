@@ -16,6 +16,6 @@ manifest:
     # support nice_oled and nice_epaper
     - name: zmk-nice-oled
       remote: mctechnology17
-      revision: v0.0.2
+      revision: main
   self:
     path: config
