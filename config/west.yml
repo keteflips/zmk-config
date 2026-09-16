@@ -4,17 +4,9 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    # Fork con soporte de ZMK main (Zephyr 4.1 + LVGL 9).
-    # Es la PR #37 de mctechnology17/zmk-nice-oled, todavia sin mergear.
-    - name: tokyo2006
-      url-base: https://github.com/tokyo2006
   projects:
     - name: zmk
       remote: zmkfirmware
       import: app/west.yml
-    # support nice_oled and nice_epaper (ZMK main / Zephyr 4.1)
-    - name: zmk-nice-oled
-      remote: tokyo2006
-      revision: de5b2afbd05f1a136e31ca28659373cd07d1e443
   self:
     path: config
