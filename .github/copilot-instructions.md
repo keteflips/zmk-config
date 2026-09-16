@@ -5,8 +5,9 @@ This repository contains a ZMK user configuration for a Sofle split keyboard.
 ## What to keep in mind
 - Edit the keymap in config/sofle.keymap, which is Devicetree source, not C.
 - Preserve the existing layer indices and custom behavior names.
-- Keep the board target as nice_nano_v2.
-- Keep ZMK pinned to v0.3 unless there is a strong reason to change it.
+- Keep the board target as nice_nano//zmk (HWMv2; nice!nano v2 is the default 2.0.0 revision).
+- ZMK tracks main (Zephyr 4.1). The OLED module comes from the tokyo2006/zmk-nice-oled fork at de5b2af (PR #37, not merged upstream).
+- Keep CONFIG_LV_Z_MEM_POOL_SIZE=16384 and CONFIG_ZMK_DISPLAY_DEDICATED_THREAD_STACK_SIZE=8192 in sofle.conf; lower values make LVGL 9 corrupt or crash the OLED.
 - Do not touch the local .zmk/ directory.
 - keymap.yaml and images/keymap/*.svg are generated from the keymap with keymap-drawer; if you change custom behaviors, update raw_binding_map in keymap_drawer.config.yaml and regenerate them.
 

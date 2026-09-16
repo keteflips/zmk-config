@@ -1,19 +1,19 @@
 # AGENTS.md — ZMK user config repo (Sofle keyboard)
 
 ## Overview
-ZMK user config for a Sofle split keyboard (nice_nano_v2 halves). Firmware is never built locally; GitHub Actions CI builds it from [config/west.yml](config/west.yml) + [build.yaml](build.yaml) via `zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3`.
+ZMK user config for a Sofle split keyboard (nice!nano v2 halves). Firmware is never built locally; GitHub Actions CI builds it from [config/west.yml](config/west.yml) + [build.yaml](build.yaml) via `zmkfirmware/zmk/.github/workflows/build-user-config.yml@main`.
 
 ## Important files
 - [config/sofle.keymap](config/sofle.keymap): the keymap, Devicetree source (not C code).
 - [config/sofle.conf](config/sofle.conf): shared Kconfig options for all Sofle builds.
-- [config/west.yml](config/west.yml): west manifest; ZMK pinned to `v0.3`, plus the external `zmk-nice-oled` module (OLED shield).
+- [config/west.yml](config/west.yml): west manifest; ZMK tracks `main` (Zephyr 4.1), plus the `zmk-nice-oled` module for the OLED widgets. The module comes from the `tokyo2006/zmk-nice-oled` fork at commit `de5b2af` (its PR #37 for Zephyr 4.1 + LVGL 9 is not merged upstream).
 - [build.yaml](build.yaml): CI build matrix, one entry per half.
-- [.github/workflows/build.yml](.github/workflows/build.yml): CI workflow; its `@v0.3` revision must match the ZMK pin in west.yml.
+- [.github/workflows/build.yml](.github/workflows/build.yml): CI workflow; its `@main` revision must match the ZMK revision in west.yml.
 - [keymap.yaml](keymap.yaml) + [keymap_drawer.config.yaml](keymap_drawer.config.yaml): keymap-drawer sources; generated SVGs live in [images/keymap/](images/keymap/).
 - [.github/copilot-instructions.md](.github/copilot-instructions.md): companion instruction file; keep in sync with this file.
 
 ## Conventions to preserve
-- Keep the board target `nice_nano_v2`.
+- Keep the board target `nice_nano//zmk` (HWMv2; nice!nano v2 is the default `2.0.0` revision, so `nice_nano//zmk` is the short form).
 - Layers are `#define`d in sofle.keymap: `BASE` 0, `LOWER` 1, `RAISE` 2, `NUMPAD` 3, `ADJUST` 4, `GAMING` 5. Reference layers only by name in `&to`, `&mo`, `&tog`, `&lt`, and `conditional_layers` — never by raw numbers. Adding or reordering a layer requires updating the defines, every reference, and the conditional-layer target. Quirk: the numpad layer node is named `extra` but has `display-name = "numpad"`.
 - Preserve the custom behaviors: `hml`/`hmr` home-row mods, the `ntilde_ht` hold-tap, and the tap-dance `tp_gravehome`. (Older names like `td_shiftend`, `td_capslock`, `hm` no longer exist — do not reintroduce them.)
 - The `&soft_off` hold-time override lives at the bottom of sofle.keymap.
@@ -25,6 +25,7 @@ ZMK user config for a Sofle split keyboard (nice_nano_v2 halves). Firmware is ne
 ## Build and CI notes
 - The left half builds with Studio (`snippet: studio-rpc-usb-uart`, `-DCONFIG_ZMK_STUDIO=y`); the Studio Kconfig lines are commented out in sofle.conf.
 - Encoders are enabled (`CONFIG_EC11`); `sensor-bindings` (volume, page up/down) are declared on the default and gaming layers only.
+- The OLED uses the `nice_oled` module's custom status screen; `config/sofle.conf` sets `CONFIG_LV_Z_MEM_POOL_SIZE=16384` and `CONFIG_ZMK_DISPLAY_DEDICATED_THREAD_STACK_SIZE=8192`. Lower values make LVGL 9 corrupt or crash the display on Zephyr 4.1 (see zmk#3219).
 - If adding a new shield or peripheral, update both west.yml and build.yaml.
 
 ## Agent guidance
