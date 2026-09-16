@@ -1,21 +1,20 @@
 manifest:
   defaults:
-    revision: v0.3
+    revision: main
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    # Additional modules containing boards/shields/custom code can be listed here as well
-    # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
-    # support nice_oled and nice_epaper
-    - name: mctechnology17
-      url-base: https://github.com/mctechnology17
+    # Fork con soporte de ZMK main (Zephyr 4.1 + LVGL 9).
+    # Es la PR #37 de mctechnology17/zmk-nice-oled, todavia sin mergear.
+    - name: tokyo2006
+      url-base: https://github.com/tokyo2006
   projects:
     - name: zmk
       remote: zmkfirmware
       import: app/west.yml
-    # support nice_oled and nice_epaper
+    # support nice_oled and nice_epaper (ZMK main / Zephyr 4.1)
     - name: zmk-nice-oled
-      remote: mctechnology17
-      revision: main
+      remote: tokyo2006
+      revision: de5b2afbd05f1a136e31ca28659373cd07d1e443
   self:
     path: config
